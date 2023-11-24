@@ -1,0 +1,8 @@
+fastapi == 0.65.1
+uvicorn == 0.14.0
+motor == 2.4.0
+python-jose==3.3.0
+passlib==1.7.4
+httpx==0.21.1
+pytest==7.4.3
+prometheus-fastapi-instrumentator

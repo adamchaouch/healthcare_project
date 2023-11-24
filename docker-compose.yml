@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  healthcare-mongo:
+    image: mongo
+    container_name: healthcare-mongo
+    ports:
+      - "27017:27017"
+
+  healthcare-users:
+    build:
+      context: ./service_users
+      dockerfile: Dockerfile
+    container_name: healthcare-users
+    ports:
+      - "8000:8000"
+    depends_on:
+      - healthcare-mongo
+    volumes:
+      - ./service_users:/app
+      - ./db_package:/app/db_package
+    environment:
+    - PROMETHEUS_MULTIPROC_DIR=/tmp
+    labels:
+    - "prometheus_job=healthcare-users"
+
+  healthcare-predictor:
+    build:
+      context: ./service_predictor
+      dockerfile: Dockerfile
+    container_name: healthcare-predictor
+    ports:
+      - "8001:8001"
+    depends_on:
+      - healthcare-mongo
+    volumes:
+      - ./service_predictor:/app
+      - ./db_package:/app/db_package
+    environment:
+    - PROMETHEUS_MULTIPROC_DIR=/tmp
+    labels:
+    - "prometheus_job=healthcare-predictor"
+
+  prometheus:
+    build:
+      context: ./prometheus
+      dockerfile: Dockerfile
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+    depends_on:
+      - prometheus
