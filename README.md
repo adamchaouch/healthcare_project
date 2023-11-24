@@ -20,5 +20,5 @@ This is a FastAPI project that includes CR, user authentication, and prediction 
    git clone https://github.com/adamchaouch/healthcare_project.git
    cd healthcare_project
 
-2. UP with :git status
+2. UP with :
    docker-compose up
