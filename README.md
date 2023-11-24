@@ -1,5 +1,4 @@
 # healthcare_project
-# FastAPI Project
 
 ## Overview
 
